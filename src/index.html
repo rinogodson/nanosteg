@@ -1,19 +1,19 @@
 <div id=u>
   <h1>nanosteg</h1>
   <div id=x>
-    <button id="hb">Hide</button>
-    <button id="sb" class=n>Reveal</button>
+    <button id=hb>Hide</button>
+    <button id=sb class=n>Reveal</button>
   </div>
-  <div id="ht">
-    <input id=m placeholder="Secret" />
-    <input id=c maxlength=8 placeholder=Carrier" />
+  <div id=ht>
+    <input id=m placeholder=Secret />
+    <input id=c maxlength=8 placeholder=Carrier />
     <button id=h>Hide</button>
   </div>
-  <div id="st" hidden>
-    <input id=l placeholder="Paste" />
+  <div id=st hidden>
+    <input id=l placeholder=Paste />
     <button id=s>Show</button>
   </div>
-  <input id=o placeholder="Output" />
+  <input id=o placeholder=Output />
   <button id=p>Copy</button>
   <button id=r>Clear</button>
   <style>
@@ -36,6 +36,7 @@
       padding: 10px;
       display: grid;
       place-items: center;
+      opacity: .9;
     }
     canvas{
       position:fixed;
@@ -75,6 +76,40 @@
     }
   </style>
   <script>
+    BC = document.createElement('canvas')
+    bcw = 200
+    bch = 1
+    BC.width = bcw
+    BC.height = bch
+    BC.style.cssText = 'filter:saturate(0);opacity:.17;position:fixed;inset:0;z-index:-1;width:100vw;height:100vh;'
+    u.before(BC)
+    BX = BC.getContext('2d')
+    BD = BX.createImageData(bcw, bch)
+    t=0
+    mx=80
+    my=45
+    onmoousemove = e => {
+      mx = e.clientX / innerWidth * bcw
+      my = e.clientY / innerHeight * bch
+    }
+    ;(function f(){
+      t += .03
+      for (let y=0; y<bch;y++)
+        for(let X=0; X<bcw; X++){
+          const v = Math.sin(X/9+t)
+                  + Math.sin(y/7-t)
+                  + Math.sin((X+y)/12+t)
+                  + Math.sin(Math.hypot(X-mx, y-my)/6-t*2)
+          const i = (y*160+X)*4
+          BD.data[i] = 128 + 127 * Math.sin(v * Math.PI)
+          BD.data[i + 1] = 128 + 127 * Math.sin(v * Math.PI + 2)
+      BD.data[i + 2] = 128 + 127 * Math.sin(v * Math.PI + 4)
+      BD.data[i + 3] = 255
+        }
+      BX.putImageData(BD, 0, 0)
+      requestAnimationFrame(f)
+    })()
+
     const q = () => (m.value = c.value = l.value = o.value = "");
 
     //Confetti engine logic
