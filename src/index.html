@@ -1,12 +1,12 @@
 <body>
   <h1>nanosteg</h1>
-  <input />
-  <input />
-  <button>Hide</button>
-  <input />
-  <button>Show</button>
-  <button>Copy</button>
-  <button>Clear</button>
+  <input id=m />
+  <input id=c maxlength=8 />
+  <button id=h>Hide</button>
+  <input id=o />
+  <button id=s>Show</button>
+  <button id=p>Copy</button>
+  <button id=r>Clear</button>
   <style>
     body {
       background: black;
@@ -14,5 +14,40 @@
       font-family: sans-serif;
     }
   </style>
-  <script></script>
+  <script>
+    const messageInput = document.getElementById('m')
+    const carrierInput = document.getElementById('c')
+    const output = document.getElementById('o')
+    const hidebtn = document.getElementById('h')
+
+    const encoder = new TextEncoder()
+
+    /** 
+      WRITTEN BY ME! NOT AN AGENT:
+      for anyone refering the code
+      this is the logic of this algorithm.
+      unicode characters from 0xFF00 to 0xFE0F are 16 chars
+      characters from 0xE0100 to 0xE01EF are 240 chars
+      which means there are 256 characters,
+      and the crazy part is that these are invisible too
+      this function basically converts the secret text to
+      these characters and then append them to the carrier
+    **/
+
+    const hidetext = (c, s) => {
+      const bytes = encoder.encode(s)
+      let invisibleString = ''
+      for (const byte of bytes) {
+        if(byte < 16)
+          invisibleString += String.fromCodePoint(0xFE00 + byte)
+        else
+          invisibleString += String.fromCodePoint(0xE0100 + (byte - 16))
+      }
+      return c + invisibleString
+    }
+
+    hidebtn.onclick = ()=>{
+      output.value = hidetext(carrierInput.value, messageInput.value)
+    }
+  </script>
 </body>
