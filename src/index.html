@@ -1,46 +1,94 @@
-<body>
+<div id=u>
   <h1>nanosteg</h1>
-  <div>
-    <button id=a>Hide</button>
-    <button id=b>Show</button>
+  <div id=x>
+    <button id=hb>Hide</button>
+    <button id=sb class=n>Reveal</button>
   </div>
-  <div id="ht">
-    <input id=m />
-    <input id=c maxlength=8 />
+  <div id=ht>
+    <input id=m placeholder=Secret >
+    <input id=c maxlength=8 placeholder=Carrier >
     <button id=h>Hide</button>
   </div>
-  <div id="st" class=g>
-    <input id=l />
+  <div id=st hidden>
+    <input id=l placeholder=Paste >
     <button id=s>Show</button>
   </div>
-  <input id=o />
+  <input id=o placeholder=Output >
   <button id=p>Copy</button>
   <button id=r>Clear</button>
   <style>
+*{
+  outline: none;
+}
     body {
       background: black;
       color: white;
-      font-family: sans-serif;
+      font-family: monospace;
+      height: 100vh;
+      display: grid; place-items: center
     }
-    .g{
-      display: none;
+    #u{
+      width: 300px;
+      display: grid;
+      gap: 10px;
+      background-color: #444;
+      padding: 10px;
+      display: grid; place-items: center
+    }
+    input,button{
+      background: #222;
+      color: #fff;
+      font-size: 1rem;
+      width: 100%;
+      padding: 6px 8px;
+      border: 2px #222 solid;
+      font-family: monospace;
+    }
+    input{
+     background:gray;
+       border-color: #222
+    }
+    #x{
+      display: flex
+    }
+    #hb, #sb{
+      background: black;
+    }
+    div:not(.g){
+      gap:10px;
+      width: 100%
+    }
+    .n{
+      opacity:.5 !important
     }
   </style>
   <script>
-    const tabHBtn = document.getElementById('a')
-    const tabSBtn = document.getElementById('b')
-    const tabH = document.getElementById('ht')
-    const tabS = document.getElementById('st')
+    const q = ()=> m.value = c.value = l.value = o.value = ''
 
-    tabHBtn.onclick = () => {
-      tabH.classList.remove('g')
-      tabS.classList.add('g')
-      document.getElementById('o').value = ""
-    }
-    tabSBtn.onclick = () => {
-      tabS.classList.remove('g')
-      tabH.classList.add('g')
-      document.getElementById('o').value = ""
+    // tabHBtn.onclick = () => {
+    //   st.hidden = true
+    //   ht.hidden = false
+    //   hb.classList.remove('n')
+    //   sb.classList.add('n')
+    //   d.getElementById('o').value = ""
+    //   q()
+    // }
+    // tabSBtn.onclick = () => {
+    //   ht.hidden = true
+    //   st.hidden = false
+    //   sb.classList.remove('n')
+    //   hb.classList.add('n')
+    //   d.getElementById('o').value = ""
+    //   q()
+    // }
+    // This is me (rino) writing this comment again, minifying it here too, with listener on parent
+    x.onclick = e =>{
+      const hide = e.target == hb;
+      ht.hidden = !hide
+      st.hidden = hide
+      hb.className = hide ? '' : 'n'
+      sb.className = hide ? 'n' : ''
+      q()
     }
 
     const encoder = new TextEncoder()
@@ -57,18 +105,13 @@
       this function basically converts the secret text to
       these characters and then append them to the carrier
     **/
-
     const hidetext = (c, s) => {
-      const bytes = encoder.encode(s)
-      let invisibleString = ''
-      for (const byte of bytes) {
-        if(byte < 16)
-          invisibleString += String.fromCodePoint(0xFE00 + byte)
-        else
-          invisibleString += String.fromCodePoint(0xE0100 + (byte - 16))
-      }
-      return c + invisibleString
+      let n = ''
+      for (const b of encoder.encode(s))
+        n += String.fromCodePoint(b<16 ? 0xFE00+b : 0xE00F0+b);
+      return c + n
     }
+    
 
     const showtext = (t)=>{
       let bytes = []
@@ -90,11 +133,9 @@
       return decoder.decode(new Uint8Array(bytes))
     }
 
-    document.getElementById('h').onclick = ()=>{
-      document.getElementById('o').value = hidetext(document.getElementById('c').value, document.getElementById('m').value)
-    }
-    document.getElementById('s').onclick = ()=>{
-      document.getElementById('o').value = showtext(document.getElementById('l').value)
-    }
+    h.onclick = ()=>o.value = hidetext(c.value, m.value)
+    s.onclick = ()=>o.value = showtext(l.value)
+    p.onclick = ()=>navigator.clipboard.writeText(o.value)
+    r.onclick = q
   </script>
-</body>
+</div>
