@@ -72,14 +72,21 @@
   <script>
     const q = () => (m.value = c.value = l.value = o.value = "");
 
-    u.onclick = (e) =>
-      "BI".includes(e.target.tagName[0]) &&
-      ((a = new AudioContext()),
-      (z = a.createOscillator()),
-      (z.frequency.value = 300),
-      z.connect(a.destination),
-      z.start(),
-      z.stop(a.currentTime + 0.01));
+    let a,z,g
+    u.onclick = e=>{
+      const t = e.target.tagName[0]
+      const f = t=='B' ? 300 : t == 'I' ? 200 : 0
+      f && (a = a || new AudioContext,
+      z = a.createOscillator(),
+      g = a.createGain(),
+      z.frequency.value = f,
+      z.connect(g).connect(a.destination),
+        g.gain.setValueAtTime(.08, a.currentTime),
+        g.gain.exponentialRampToValueAtTime(.001, a.currentTime + .5),
+        z.start(),
+        z.stop(a.currentTime + .5)
+        )
+    }
 
     // tabHBtn.onclick = () => {
     //   st.hidden = true
