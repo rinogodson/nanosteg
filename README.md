@@ -1,4 +1,5 @@
 # nanosteg
+<img width="415" height="489" alt="image" src="https://github.com/user-attachments/assets/64eceb1e-c6f5-4807-af48-3bad769362dd" />
 
 This is a tool to hide text inside text for secret communications...
 and the crazy part is, this entire tool is under 3kb!
