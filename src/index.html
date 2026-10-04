@@ -5,38 +5,38 @@
     <button id=sb class=n>Reveal</button>
   </div>
   <div id=ht>
-    <input id=m placeholder=Secret />
-    <input id=c maxlength=8 placeholder=Carrier />
+    <input id=m placeholder=Secret >
+    <input id=c maxlength=8 placeholder=Carrier >
     <button id=h>Hide</button>
   </div>
   <div id=st hidden>
-    <input id=l placeholder=Paste />
+    <input id=l placeholder=Paste >
     <button id=s>Show</button>
   </div>
-  <input id=o placeholder=Output />
+  <input id=o placeholder=Output >
   <button id=p>Copy</button>
   <button id=r>Clear</button>
   <style>
     * {
-      outline: none;
+      outline: 0;
     }
     body {
-      background: black;
-      color: white;
+      background: #000;
+      color: #fff;
       font-family: monospace;
+      font-size: 1rem;
       height: 100vh;
       display: grid;
-      place-items: center;
+      place-items: center
     }
     #u {
       width: 300px;
       display: grid;
       gap: 10px;
-      background-color: #444;
+      background: #444;
       padding: 10px;
-      display: grid;
       place-items: center;
-      opacity: .9;
+      opacity: .9
     }
     canvas{
       position:fixed;
@@ -47,70 +47,61 @@
     button {
       background: #222;
       color: #fff;
-      font-size: 1rem;
       width: 100%;
       padding: 6px 8px;
       border: 2px #222 solid;
-      font-family: monospace;
+      font: inherit
     }
     button:active {
       filter: brightness(1.3);
     }
     input {
       background: gray;
-      border-color: #222;
+      border-color: #222
     }
     #x {
       display: flex;
     }
     #hb,
     #sb {
-      background: black;
+      background: #000;
     }
-    div:not(.g) {
+    div {
       gap: 10px;
-      width: 100%;
+      width: 100%
     }
     .n {
-      opacity: 0.5 !important;
+      opacity: .5;
     }
   </style>
   <script>
     BC = document.createElement('canvas')
-    bcw = 200
-    bch = 1
-    BC.width = bcw
-    BC.height = bch
-    BC.style.cssText = 'filter:saturate(0);opacity:.17;position:fixed;inset:0;z-index:-1;width:100vw;height:100vh;'
+    bcw = BC.width = 200
+    BC.height = 1
+    BC.style.cssText = 'filter:saturate(0);opacity:.17;position:fixed;inset:0;z-index:-1;width:100%;height:100%'
     u.before(BC)
     BX = BC.getContext('2d')
-    BD = BX.createImageData(bcw, bch)
-    t=0
-    mx=80
-    my=45
-    onmoousemove = e => {
-      mx = e.clientX / innerWidth * bcw
-      my = e.clientY / innerHeight * bch
-    }
+    BD = BX.createImageData(bcw, 1)
+    D = BD.data
+    t = 0
     ;(function f(){
       t += .03
-      for (let y=0; y<bch;y++)
-        for(let X=0; X<bcw; X++){
-          const v = Math.sin(X/9+t)
-                  + Math.sin(y/7-t)
-                  + Math.sin((X+y)/12+t)
-                  + Math.sin(Math.hypot(X-mx, y-my)/6-t*2)
-          const i = (y*160+X)*4
-          BD.data[i] = 128 + 127 * Math.sin(v * Math.PI)
-          BD.data[i + 1] = 128 + 127 * Math.sin(v * Math.PI + 2)
-      BD.data[i + 2] = 128 + 127 * Math.sin(v * Math.PI + 4)
-      BD.data[i + 3] = 255
-        }
+      for (let X = 0; X < bcw; X++) {
+        const v = Math.sin(X / 9 + t)
+                + Math.sin(-t)
+                + Math.sin(X / 12 + t)
+                + Math.sin(Math.hypot(X - 80, 45) / 6 - t * 2)
+        const i = X * 4
+        D[i] = 128 + 127 * Math.sin(v * Math.PI)
+        D[i + 1] = 128 + 127 * Math.sin(v * Math.PI + 2)
+        D[i + 2] = 128 + 127 * Math.sin(v * Math.PI + 4)
+        D[i + 3] = 255
+      }
       BX.putImageData(BD, 0, 0)
       requestAnimationFrame(f)
     })()
 
-    const q = () => (m.value = c.value = l.value = o.value = "");
+    q = () => (m.value = c.value = l.value = o.value = "")
 
     //Confetti engine logic
     R = Math.random
@@ -177,16 +168,16 @@
     // }
     // This is me (rino) writing this comment again, minifying it here too, with listener on parent
     x.onclick = (e) => {
-      const hide = e.target == hb;
-      ht.hidden = !hide;
-      st.hidden = hide;
-      hb.className = hide ? "" : "n";
-      sb.className = hide ? "n" : "";
-      q();
-    };
+      const hide = e.target == hb
+      ht.hidden = !hide
+      st.hidden = hide
+      hb.className = hide ? "" : "n"
+      sb.className = hide ? "n" : ""
+      q()
+    }
 
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
+    encoder = new TextEncoder()
+    decoder = new TextDecoder()
 
     /** 
       WRITTEN BY ME! NOT AN AGENT:
@@ -200,33 +191,33 @@
       these characters and then append them to the carrier
     **/
     const hidetext = (c, s) => {
-      let n = "";
+      let n = ""
       for (const b of encoder.encode(s))
-        n += String.fromCodePoint(b < 16 ? 0xfe00 + b : 0xe00f0 + b);
-      return c + n;
-    };
+        n += String.fromCodePoint(b < 16 ? 0xfe00 + b : 0xe00f0 + b)
+      return c + n
+    }
 
     const showtext = (t) => {
-      let bytes = [];
+      let bytes = []
       for (const char of t) {
-        const code = char.codePointAt(0);
-        let val = -1;
+        const code = char.codePointAt(0)
+        let val = -1
 
-        if (code >= 0xfe00 && code < 0xfe10) val = code - 0xfe00;
-        else if (code >= 0xe0100 && code <= 0xe01ef) val = code - 0xe0100 + 16;
+        if (code >= 0xfe00 && code < 0xfe10) val = code - 0xfe00
+        else if (code >= 0xe0100 && code <= 0xe01ef) val = code - 0xe0100 + 16
 
         if (val < 0) {
-          if (bytes.length > 0) break;
-          continue;
+          if (bytes.length) break
+          continue
         }
-        bytes.push(val);
+        bytes.push(val)
       }
-      return decoder.decode(new Uint8Array(bytes));
-    };
+      return decoder.decode(new Uint8Array(bytes))
+    }
 
-    h.onclick = () => (o.value = hidetext(c.value, m.value));
-    s.onclick = () => (o.value = showtext(l.value));
-    p.onclick = () => navigator.clipboard.writeText(o.value);
-    r.onclick = q;
+    h.onclick = () => (o.value = hidetext(c.value, m.value))
+    s.onclick = () => (o.value = showtext(l.value))
+    p.onclick = () => navigator.clipboard.writeText(o.value)
+    r.onclick = q
   </script>
 </div>
