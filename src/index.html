@@ -1,19 +1,19 @@
 <div id=u>
   <h1>nanosteg</h1>
   <div id=x>
-    <button id=hb>Hide</button>
-    <button id=sb class=n>Reveal</button>
+    <button id=hb>HIDE</button>
+    <button id=sb class=n>SHOW</button>
   </div>
   <div id=ht>
     <input id=m placeholder=Secret >
-    <input id=c maxlength=8 placeholder=Carrier >
+    <input id=c placeholder=Carrier >
     <button id=h>Hide</button>
   </div>
   <div id=st hidden>
     <input id=l placeholder=Paste >
     <button id=s>Show</button>
   </div>
-  <input id=o placeholder=Output >
+  <input id=o readonly placeholder=Output >
   <button id=p>Copy</button>
   <button id=r>Clear</button>
   <style>
@@ -21,8 +21,8 @@
       outline: 0;
     }
     body {
-      background: #000;
-      color: #fff;
+      background: black;
+      color: white;
       font-family: monospace;
       font-size: 1rem;
       height: 100vh;
@@ -46,7 +46,7 @@
     input,
     button {
       background: #222;
-      color: #fff;
+      color: white;
       width: 100%;
       padding: 6px 8px;
       border: 2px #222 solid;
@@ -59,12 +59,15 @@
       background: gray;
       border-color: #222
     }
+    input:focus{
+      background: #666
+    }
     #x {
       display: flex;
     }
     #hb,
     #sb {
-      background: #000;
+      background: black;
     }
     div {
       gap: 10px;
@@ -86,15 +89,16 @@
     t = 0
     ;(function f(){
       t += .03
+      J = Math
       for (let X = 0; X < bcw; X++) {
-        const v = Math.sin(X / 9 + t)
-                + Math.sin(-t)
-                + Math.sin(X / 12 + t)
-                + Math.sin(Math.hypot(X - 80, 45) / 6 - t * 2)
+        const v = J.sin(X / 9 + t)
+                + J.sin(-t)
+                + J.sin(X / 12 + t)
+                + J.sin(J.hypot(X - 80, 45) / 6 - t * 2)
         const i = X * 4
-        D[i] = 128 + 127 * Math.sin(v * Math.PI)
-        D[i + 1] = 128 + 127 * Math.sin(v * Math.PI + 2)
-        D[i + 2] = 128 + 127 * Math.sin(v * Math.PI + 4)
+        D[i] = 128 + 127 * J.sin(v * J.PI)
+        D[i + 1] = 128 + 127 * J.sin(v * J.PI + 2)
+        D[i + 2] = 128 + 127 * J.sin(v * J.PI + 4)
         D[i + 3] = 255
       }
       BX.putImageData(BD, 0, 0)
@@ -104,17 +108,15 @@
     q = () => (m.value = c.value = l.value = o.value = "")
 
     //Confetti engine logic
-    R = Math.random
+    R = J.random
     C = document.createElement('canvas')
     u.append(C)
     X=C.getContext('2d')
     P = []
     W=C.width=innerWidth
     H=C.height=innerHeight
-    onresize =_=>{W=C.width=innerWidth;H=C.height=innerHeight}
     B=(x,y)=>{for(let i=30;i--;)P.push([x+R()*30-15,y+R()*30-15,R()*10-5,R()*-10-3,R()*2+1,R()*360,1])}
     setInterval(_=>{
-      if(!P.length) return 
       X.clearRect(0,0,W,H)
       for(let i = P.length; i--;){
         let p=P[i]
@@ -142,7 +144,7 @@
       g = a.createGain(),
       z.frequency.value = f,
       z.connect(g).connect(a.destination),
-        g.gain.setValueAtTime(.08, a.currentTime),
+        g.gain.value=.08,
         g.gain.exponentialRampToValueAtTime(.001, a.currentTime + .5),
         z.start(),
         z.stop(a.currentTime + .5))
