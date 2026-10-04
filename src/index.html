@@ -89,16 +89,16 @@
     t = 0
     ;(function f(){
       t += .03
-      J = Math
+      M = Math
       for (let X = 0; X < bcw; X++) {
-        const v = J.sin(X / 9 + t)
-                + J.sin(-t)
-                + J.sin(X / 12 + t)
-                + J.sin(J.hypot(X - 80, 45) / 6 - t * 2)
+        const v = M.sin(X / 9 + t)
+                + M.sin(-t)
+                + M.sin(X / 12 + t)
+                + M.sin(M.hypot(X - 80, 45) / 6 - t * 2)
         const i = X * 4
-        D[i] = 128 + 127 * J.sin(v * J.PI)
-        D[i + 1] = 128 + 127 * J.sin(v * J.PI + 2)
-        D[i + 2] = 128 + 127 * J.sin(v * J.PI + 4)
+        D[i] = 128 + 127 * M.sin(v * M.PI)
+        D[i + 1] = 128 + 127 * M.sin(v * M.PI + 2)
+        D[i + 2] = 128 + 127 * M.sin(v * M.PI + 4)
         D[i + 3] = 255
       }
       BX.putImageData(BD, 0, 0)
@@ -108,7 +108,7 @@
     q = () => (m.value = c.value = l.value = o.value = "")
 
     //Confetti engine logic
-    R = J.random
+    R = M.random
     C = document.createElement('canvas')
     u.append(C)
     X=C.getContext('2d')

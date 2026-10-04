@@ -59,4 +59,3 @@ console.log(
     " bytes, " +
     (bytes > LIMIT ? bytes - LIMIT + " over" : LIMIT - bytes + " left"),
 );
-
