@@ -1,21 +1,21 @@
-<div id="u">
+<div id=u>
   <h1>nanosteg</h1>
-  <div id="x">
+  <div id=x>
     <button id="hb">Hide</button>
-    <button id="sb" class="n">Reveal</button>
+    <button id="sb" class=n>Reveal</button>
   </div>
   <div id="ht">
-    <input id="m" placeholder="Secret" />
-    <input id="c" maxlength="8" placeholder="Carrier" />
-    <button id="h">Hide</button>
+    <input id=m placeholder="Secret" />
+    <input id=c maxlength=8 placeholder=Carrier" />
+    <button id=h>Hide</button>
   </div>
   <div id="st" hidden>
-    <input id="l" placeholder="Paste" />
-    <button id="s">Show</button>
+    <input id=l placeholder="Paste" />
+    <button id=s>Show</button>
   </div>
-  <input id="o" placeholder="Output" />
-  <button id="p">Copy</button>
-  <button id="r">Clear</button>
+  <input id=o placeholder="Output" />
+  <button id=p>Copy</button>
+  <button id=r>Clear</button>
   <style>
     * {
       outline: none;
@@ -36,6 +36,11 @@
       padding: 10px;
       display: grid;
       place-items: center;
+    }
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events: none
     }
     input,
     button {
@@ -72,6 +77,36 @@
   <script>
     const q = () => (m.value = c.value = l.value = o.value = "");
 
+    //Confetti engine logic
+    R = Math.random
+    C = document.createElement('canvas')
+    u.append(C)
+    X=C.getContext('2d')
+    P = []
+    W=C.width=innerWidth
+    H=C.height=innerHeight
+    onresize =_=>{W=C.width=innerWidth;H=C.height=innerHeight}
+    B=(x,y)=>{for(let i=30;i--;)P.push([x+R()*30-15,y+R()*30-15,R()*10-5,R()*-10-3,R()*2+1,R()*360,1])}
+    setInterval(_=>{
+      if(!P.length) return 
+      X.clearRect(0,0,W,H)
+      for(let i = P.length; i--;){
+        let p=P[i]
+        p[0]+=p[2]
+        p[1]+=p[3]
+        p[3]+=.4
+        p[2]*=.98
+        p[6]-=.02
+        if(p[6]<0||p[1]>H+30){
+          P.splice(i,1)
+          continue
+        }
+        X.globalAlpha=p[6]
+        X.fillStyle=`hsl(${p[5]},90%,60%)`
+        X.fillRect(p[0],p[1],p[4],p[4]*2)
+      }
+    }, 17)
+
     let a,z,g
     u.onclick = e=>{
       const t = e.target.tagName[0]
@@ -84,9 +119,10 @@
         g.gain.setValueAtTime(.08, a.currentTime),
         g.gain.exponentialRampToValueAtTime(.001, a.currentTime + .5),
         z.start(),
-        z.stop(a.currentTime + .5)
-        )
+        z.stop(a.currentTime + .5))
+      'hsp'.includes(e.target.id) && B(e.clientX, e.clientY)
     }
+
 
     // tabHBtn.onclick = () => {
     //   st.hidden = true
