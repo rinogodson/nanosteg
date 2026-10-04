@@ -1,10 +1,19 @@
 <body>
   <h1>nanosteg</h1>
-  <input id=m />
-  <input id=c maxlength=8 />
-  <button id=h>Hide</button>
+  <div>
+    <button id=a>Hide</button>
+    <button id=b>Show</button>
+  </div>
+  <div id="ht">
+    <input id=m />
+    <input id=c maxlength=8 />
+    <button id=h>Hide</button>
+  </div>
+  <div id="st" class=g>
+    <input id=l />
+    <button id=s>Show</button>
+  </div>
   <input id=o />
-  <button id=s>Show</button>
   <button id=p>Copy</button>
   <button id=r>Clear</button>
   <style>
@@ -13,14 +22,29 @@
       color: white;
       font-family: sans-serif;
     }
+    .g{
+      display: none;
+    }
   </style>
   <script>
-    const messageInput = document.getElementById('m')
-    const carrierInput = document.getElementById('c')
-    const output = document.getElementById('o')
-    const hidebtn = document.getElementById('h')
+    const tabHBtn = document.getElementById('a')
+    const tabSBtn = document.getElementById('b')
+    const tabH = document.getElementById('ht')
+    const tabS = document.getElementById('st')
+
+    tabHBtn.onclick = () => {
+      tabH.classList.remove('g')
+      tabS.classList.add('g')
+      document.getElementById('o').value = ""
+    }
+    tabSBtn.onclick = () => {
+      tabS.classList.remove('g')
+      tabH.classList.add('g')
+      document.getElementById('o').value = ""
+    }
 
     const encoder = new TextEncoder()
+    const decoder = new TextDecoder()
 
     /** 
       WRITTEN BY ME! NOT AN AGENT:
@@ -46,8 +70,31 @@
       return c + invisibleString
     }
 
-    hidebtn.onclick = ()=>{
-      output.value = hidetext(carrierInput.value, messageInput.value)
+    const showtext = (t)=>{
+      let bytes = []
+      for(const char of t){
+        const code = char.codePointAt(0)
+        let val = -1
+
+        if(code >= 0xFE00 && code < 0xFE10)
+          val = code - 0xFE00
+        else if(code>=0xE0100 && code <=0xE01EF)
+          val = code - 0xE0100 + 16
+
+        if(val < 0){
+          if(bytes.length > 0) break
+          continue
+        }
+        bytes.push(val)
+      }
+      return decoder.decode(new Uint8Array(bytes))
+    }
+
+    document.getElementById('h').onclick = ()=>{
+      document.getElementById('o').value = hidetext(document.getElementById('c').value, document.getElementById('m').value)
+    }
+    document.getElementById('s').onclick = ()=>{
+      document.getElementById('o').value = showtext(document.getElementById('l').value)
     }
   </script>
 </body>
